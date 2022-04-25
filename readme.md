@@ -1,10 +1,10 @@
-#Autoslave
+# Autoslave
 
 Sorts telegram chats to *TRASH*, *SLOW* and *FAST* Using such criteria as:
 - Average number of messages that should appear in chat per hour
 - Number of users that should be active in chat within one **DAY**
 - Minimal amount of members in chat.
-##Usage
+## Usage
 * Place your list of chats in `input.txt` file.
 * Place your settings **IN CORRECT ORDER** into `settings.txt` file.
 * Place your tdata folders into accounts folder.
