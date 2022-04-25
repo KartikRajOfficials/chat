@@ -1,0 +1,2 @@
+C:\Users\ADMIN\PycharmProjects\TgChatSorting\accounts\tdata
+C:\Users\ADMIN\PycharmProjects\TgChatSorting\accounts\tdata_1
