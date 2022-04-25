@@ -24,7 +24,4 @@ Each number should be written on a new line.
     should be processed by each account. **Do not make this parameter bigger than 98.**
     In other case your account will probably get FloodWait.
 * Launch `main` function
-* Enter your phone number
-* Enter code that you received to telegram
-* Enter password if you use 2FA.
 * Enjoy!
