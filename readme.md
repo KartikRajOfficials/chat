@@ -6,8 +6,8 @@ Sorts telegram chats to *TRASH*, *SLOW* and *FAST* Using such criteria as:
 - Minimal amount of members in chat.
 ## Usage
 * Place your list of chats in `input.txt` file.
-* Place your settings **IN CORRECT ORDER** into `settings.txt` file.
 * Place your tdata folders into accounts folder.
+* Place your settings **IN CORRECT ORDER** into `settings.txt` file.
 Each number should be written on a new line.
     - trashBound = 10 by default. If a chat has `trashBound` or less
     messages per hour, it will be determined as `TRASH`
