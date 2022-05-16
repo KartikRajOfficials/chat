@@ -1,13 +1,13 @@
-#Autoslave
+# Autoslave
 
 Sorts telegram chats to *TRASH*, *SLOW* and *FAST* Using such criteria as:
 - Average number of messages that should appear in chat per hour
 - Number of users that should be active in chat within one **DAY**
 - Minimal amount of members in chat.
-##Usage
+## Usage
 * Place your list of chats in `input.txt` file.
-* Place your settings **IN CORRECT ORDER** into `settings.txt` file.
 * Place your tdata folders into accounts folder.
+* Place your settings **IN CORRECT ORDER** into `settings.txt` file.
 Each number should be written on a new line.
     - trashBound = 10 by default. If a chat has `trashBound` or less
     messages per hour, it will be determined as `TRASH`
@@ -24,7 +24,4 @@ Each number should be written on a new line.
     should be processed by each account. **Do not make this parameter bigger than 98.**
     In other case your account will probably get FloodWait.
 * Launch `main` function
-* Enter your phone number
-* Enter code that you received to telegram
-* Enter password if you use 2FA.
 * Enjoy!
