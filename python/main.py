@@ -3,6 +3,7 @@ import io
 import os
 import time
 
+from opentele.exception import TDesktopUnauthorized
 from opentele.td import TDesktop, API
 from opentele.tl import telethon
 from telethon.errors import FloodWaitError
@@ -66,18 +67,30 @@ async def update_client(tdata_path):
 
 
 async def goto_next_client(paths):
-    global bad_accounts_lines
+    global bad_accounts_lines, client
 
     if client is not None:
-        await client.disconnect()
+        try:
+            await client.disconnect()
+        except:
+            pass
+
         os.remove(sys.path[1] + "\\python\\" + sessionName)
         bad_accounts.write(client_path + "\n")
         bad_accounts_lines.append(client_path)
 
     new = get_first_good_path(paths)
     print("Enabling client:\n" + new)
-    await update_client(new)
-    await client.start()
+
+    try:
+        await update_client(new)
+        await client.start()
+    except TDesktopUnauthorized:
+        print("Bad account passed")
+        client = None
+        bad_accounts.write(client_path + "\n")
+        bad_accounts_lines.append(client_path)
+        await goto_next_client(paths)
 
 
 async def main():
@@ -89,6 +102,7 @@ async def main():
     fast_path = path + FAST + ext
     slow_path = path + SLOW + ext
     trash_path = path + TRASH + ext
+    error_path = path + "error.txt"
 
     try:
         os.remove(fast_path)
@@ -105,6 +119,8 @@ async def main():
     fast = open(fast_path, 'a')
     slow = open(slow_path, 'a')
     trash = open(trash_path, 'a')
+    error = open(error_path, 'a')
+
     bad_accounts = open(accounts_dir_path + "\\bad_accounts_paths.txt", "r+")
     bad_accounts_lines = bad_accounts.readlines()
 
@@ -124,6 +140,7 @@ async def main():
             try:
                 if one_account_chats_counter >= chatsPerAccount:
                     print("Disabling client:\n" + client_path)
+                    one_account_chats_counter = 0
                     await goto_next_client(accounts_paths)
 
                 found += 1
@@ -138,9 +155,10 @@ async def main():
                     slow.write(chat)
                 else:
                     fast.write(chat)
-            except FloodWaitError:
+            except FloodWaitError or TDesktopUnauthorized:
                 await goto_next_client(accounts_paths)
             except:
+                error.write(chat)
                 print("error: " + chat)
                 error_count += 1
             finally:
@@ -154,7 +172,11 @@ async def main():
                     )
 
     finally:
-        await client.disconnect()
+        try:
+            await client.disconnect()
+        except:
+            pass
+
         fast.write('\n')
         slow.write('\n')
         trash.write('\n')
