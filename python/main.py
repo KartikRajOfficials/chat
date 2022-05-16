@@ -25,6 +25,8 @@ fast: io.TextIOWrapper
 slow: io.TextIOWrapper
 trash: io.TextIOWrapper
 
+is_end = False
+
 
 def get_sub_paths(path):
     names = list(list(os.walk(path))[0])[1]
@@ -41,12 +43,14 @@ def remove_session():
 
 
 def no_accounts():
+    global is_end
     print("No good accounts left")
     try:
         remove_session()
     except:
-        None
-    quit()
+        pass
+
+    is_end = True
 
 
 def get_first_good_path(paths):
@@ -80,6 +84,11 @@ async def goto_next_client(paths):
         bad_accounts_lines.append(client_path)
 
     new = get_first_good_path(paths)
+
+    if new is None:
+        no_accounts()
+        return
+
     print("Enabling client:\n" + new)
 
     try:
@@ -137,6 +146,8 @@ async def main():
         one_account_chats_counter = 0
 
         for chat in files:
+            if is_end:
+                break
             try:
                 if one_account_chats_counter >= chatsPerAccount:
                     print("Disabling client:\n" + client_path)
@@ -184,7 +195,7 @@ async def main():
         print("errors: " + str(error_count))
         print("total time: " + str(time.time() - start))
 
-        quit()
+        input("Press any key to continue")
 
 
 asyncio.run(main())
