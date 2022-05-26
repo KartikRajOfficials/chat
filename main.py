@@ -2,17 +2,18 @@ import asyncio
 import io
 import os
 import time
+import traceback
 
 from opentele.exception import TDesktopUnauthorized
 from opentele.td import TDesktop, API
 from opentele.tl import telethon
 from telethon.errors import FloodWaitError
 
-from python.properties import read_files
+from properties import read_files
 
 files = read_files()
 
-from python.checkers import *
+from checkers import *
 
 error_count = 0
 start = time.time()
@@ -39,7 +40,12 @@ def get_sub_paths(path):
 
 
 def remove_session():
-    os.remove(sys.path[1] + "\\python\\" + sessionName)
+    path = sys.path[1].replace("lib-dynload", "")
+
+    if not path.endswith('//'):
+        path += '//'
+
+    os.remove(path + sessionName)
 
 
 def no_accounts():
@@ -79,7 +85,8 @@ async def goto_next_client(paths):
         except:
             pass
 
-        os.remove(sys.path[1] + "\\python\\" + sessionName)
+        # os.remove(sys.path[1] + "\\python\\" + sessionName)
+        remove_session()
         bad_accounts.write(client_path + "\n")
         bad_accounts_lines.append(client_path)
 
@@ -105,7 +112,7 @@ async def goto_next_client(paths):
 async def main():
     global error_count, start, client, client_path, bad_accounts, bad_accounts_lines, fast, slow, trash
 
-    path = sys.path[1] + "\\output\\"
+    path = normalize_path(sys.path[1] + "\\output\\")
     ext = ".txt"
 
     fast_path = path + FAST + ext
@@ -117,12 +124,13 @@ async def main():
         os.remove(fast_path)
         os.remove(slow_path)
         os.remove(trash_path)
+        os.remove(error_path)
     except FileNotFoundError:
         print("Output files deleted. DO NOT DELETE THEM THE NEXT TIME !!!")
     finally:
         print('Files prepared')
 
-    accounts_dir_path = sys.path[1] + "\\accounts\\"
+    accounts_dir_path = normalize_path(sys.path[1] + "\\accounts\\")
     accounts_paths = get_sub_paths(accounts_dir_path)
 
     fast = open(fast_path, 'a')
@@ -130,7 +138,7 @@ async def main():
     trash = open(trash_path, 'a')
     error = open(error_path, 'a')
 
-    bad_accounts = open(accounts_dir_path + "\\bad_accounts_paths.txt", "r+")
+    bad_accounts = open(normalize_path(accounts_dir_path + "\\bad_accounts_paths.txt"), "r+")
     bad_accounts_lines = bad_accounts.readlines()
 
     for i in range(len(bad_accounts_lines)):
@@ -166,9 +174,10 @@ async def main():
                     slow.write(chat)
                 else:
                     fast.write(chat)
-            except FloodWaitError or TDesktopUnauthorized:
+            except FloodWaitError:
+                traceback.print_exc()
                 await goto_next_client(accounts_paths)
-            except:
+            except BaseException:
                 error.write(chat)
                 print("error: " + chat)
                 error_count += 1
@@ -195,7 +204,14 @@ async def main():
         print("errors: " + str(error_count))
         print("total time: " + str(time.time() - start))
 
-        input("Press any key to continue")
 
+try:
+    asyncio.run(main())
+except BaseException:
 
-asyncio.run(main())
+    print(sys.exc_info()[0])
+
+    print(traceback.format_exc())
+finally:
+    print("Press Enter to continue ...")
+    input()

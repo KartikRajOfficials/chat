@@ -18,8 +18,9 @@ TRASH = 'trash'
 
 
 def read_settings():
-    # try:
-        f = open(sys.path[1] + "\\properties\\settings.txt")
+    try:
+        path = normalize_path(sys.path[1] + "\\properties\\settings.txt")
+        f = open(path)
         lines = f.readlines()
         global trashBound, slowBound, membersBound, sendersBound, chatsPerAccount
         trashBound = int(lines[0].replace("\n", ""))
@@ -27,15 +28,21 @@ def read_settings():
         sendersBound = int(lines[2].replace("\n", ""))
         membersBound = int(lines[3].replace("\n", ""))
         chatsPerAccount = int(lines[4].replace("\n", ""))
-    # except:
-    #     print("Settings are absent or not properly formatted. Using default settings")
+    except:
+        print("Settings are absent or not properly formatted. Using default settings")
+        quit()
 
 
 def read_input_chats():
-    f = open(sys.path[1] + '\\properties\\input.txt')
+    f = open(normalize_path(sys.path[1] + '\\properties\\input.txt'))
     return f.readlines()
 
 
 def read_files():
     read_settings()
     return read_input_chats()
+
+
+def normalize_path(path: str):
+    res = path.replace("\\dist\\main\\lib-dynload", "")
+    return res

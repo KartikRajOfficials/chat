@@ -1,5 +1,5 @@
-from python.properties import *
-from python.time_utils import *
+from properties import *
+from time_utils import *
 from telethon.tl.functions.channels import GetFullChannelRequest
 
 
@@ -63,7 +63,7 @@ async def check_entity(client, chat_tag):
 
 
 async def get_speed(client, chat_tag):
-    messages = await client.get_messages(entity=chat_tag, limit=1205)
+    messages = await client.get_messages(entity=chat_tag, limit=4803)
 
     activity = is_activity_enough(messages, chat_tag)
     return activity
