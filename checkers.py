@@ -3,30 +3,41 @@ from time_utils import *
 from telethon.tl.functions.channels import GetFullChannelRequest
 
 
-def is_activity_enough(messages, chat_name):
+def get_activity(messages, chat_name):
     messages.reverse()
 
     first_date = datetime.datetime.now(tz=datetime.timezone.utc)
     first_time = get_hours(first_date)
-    senders = set()
 
     amount = len(messages)
+
     for m in messages:
         cur = get_hours(m.date)
         delta = first_time - cur
-        if delta > 24:
+        if delta > 1:
             amount -= 1
-            continue
-
-        senders.add(str(m.from_id))
-        if len(senders) >= sendersBound:
+        else:
             break
 
-    if len(senders) < sendersBound:
-        print(chat_name + " - trash(" + len(senders).__str__() + " senders)")
-        return TRASH
-
-    amount /= 24
+    # senders = set()
+    #
+    # amount = len(messages)
+    # for m in messages:
+    #     cur = get_hours(m.date)
+    #     delta = first_time - cur
+    #     if delta > 24:
+    #         amount -= 1
+    #         continue
+    #
+    #     senders.add(str(m.from_id))
+    #     if len(senders) >= sendersBound:
+    #         break
+    #
+    # if len(senders) < sendersBound:
+    #     print(chat_name + " - trash(" + len(senders).__str__() + " senders)")
+    #     return TRASH
+    #
+    # amount /= 24
 
     if amount <= trashBound:
         print(chat_name + " - trash(" + amount.__str__() + " per hour)")
@@ -63,7 +74,7 @@ async def check_entity(client, chat_tag):
 
 
 async def get_speed(client, chat_tag):
-    messages = await client.get_messages(entity=chat_tag, limit=4803)
+    messages = await client.get_messages(entity=chat_tag, limit=accuracyLimit)
 
-    activity = is_activity_enough(messages, chat_tag)
+    activity = get_activity(messages, chat_tag)
     return activity

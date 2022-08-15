@@ -8,9 +8,9 @@ phone = '+79653995169'
 
 trashBound = 10
 slowBound = 50
-sendersBound = 10
 membersBound = 200
 chatsPerAccount = 70
+accuracyLimit = 300
 
 FAST = 'fast'
 SLOW = 'slow'
@@ -22,12 +22,12 @@ def read_settings():
         path = normalize_path(sys.path[1] + "\\properties\\settings.txt")
         f = open(path)
         lines = f.readlines()
-        global trashBound, slowBound, membersBound, sendersBound, chatsPerAccount
+        global trashBound, slowBound, membersBound, chatsPerAccount, accuracyLimit
         trashBound = int(lines[0].replace("\n", ""))
         slowBound = int(lines[1].replace("\n", ""))
-        sendersBound = int(lines[2].replace("\n", ""))
-        membersBound = int(lines[3].replace("\n", ""))
-        chatsPerAccount = int(lines[4].replace("\n", ""))
+        membersBound = int(lines[2].replace("\n", ""))
+        chatsPerAccount = int(lines[3].replace("\n", ""))
+        accuracyLimit = int(lines[4].replace("\n", ""))
     except:
         print("Settings are absent or not properly formatted. Using default settings")
         quit()

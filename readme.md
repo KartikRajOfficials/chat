@@ -15,13 +15,13 @@ Each number should be written on a new line.
     between `trashBound` and `slowBound`, the chat will be determined
     as `SLOW`. If this value is bigger than `slowBound`, the chat
     will be determined as `FAST`
-    - sendersBound = 10 by default. Reflects minimal amount of users,
-    that should be active within 24 hours. If this value is not reached,
-    the chat is determined as `TRASH`
     - membersBound = 200 by default. The minimal amount of chat members.
     If this value is not reached, the chat is determined as `TRASH`
     - chatsPerAccount = 70 by default. Represents number of chats that
     should be processed by each account. **Do not make this parameter bigger than 98.**
     In other case your account will probably get FloodWait.
+    - accuracyLimit = 300 by default. This parameter specifies the highest amount of
+    messages per hour that will be displayed correctly. If chat contains more than
+    `accuracyLimit` messages per hour `accuracyLimit` value will be displayed.
 * Launch `main` function
 * Enjoy!
